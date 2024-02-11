@@ -1,0 +1,58 @@
+﻿@page "/add/{Id}"
+@rendermode InteractiveServer
+
+<PageTitle>Add Config Settings</PageTitle>
+
+@if (AllConfigSettings.Count > 0 && SpecificConfigSettings.Count > 0)
+{
+    <h3>@Title</h3>
+
+    <p>Add new config key and values</p>
+
+    <EditForm Model=@Config OnValidSubmit="@OnValidSubmit" FormName="frmAdd">
+        <DataAnnotationsValidator />
+        <AntiforgeryToken />
+
+        @if (Server != "Default")
+        {
+            <div class="form-group mb-3 row">
+                <label class="col-sm-2 col-form-label">Key: </label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="ddl-keys" @onchange="@((ChangeEventArgs e) => DropDownListItemSelection(e.Value.ToString()))">
+                        <option value="">Please Select</option>
+                        @foreach (var item in DropDownListItems)
+                        {
+                            <option value="@item.Description">@item.Description</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group mb-3 row">
+                <label class="col-sm-2 col-form-label">Key</label>
+                <div class="col-sm-10">
+                    <InputText @bind-Value=Config.Key class="form-control" id="key" />
+                    <ValidationMessage For="() => Config.Key" />
+                </div>
+            </div>
+        }
+
+        <div class="form-group mb-3 row">
+            <label class="col-sm-2 col-form-label">Value</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value=Config.Value class="form-control" id="value" />
+                <ValidationMessage For="() => Config.Value" />
+            </div>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Add" />
+        <button class="btn btn-secondary" type="button" @onclick='() => NavigationManager.NavigateTo(NavigationManager.BaseUri)'>Back to home</button>
+    </EditForm>
+
+    @if (ShowMessage)
+    {
+        <p id="message" style="padding-top: 20px; color: @MessageColour">@Message</p>
+    }
+}

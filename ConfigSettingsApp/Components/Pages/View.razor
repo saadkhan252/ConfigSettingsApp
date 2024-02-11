@@ -1,0 +1,43 @@
+﻿@page "/view"
+@rendermode InteractiveServer
+
+<PageTitle>View Config Settings</PageTitle>
+
+<h1>All Config Settings</h1>
+
+<div class="form-group">
+    <label class="form-label">Config Type: </label>
+    <div>
+        <select class="form-control" id="ddl-servers" @onchange="@((ChangeEventArgs e) => DropDownListItemSelection(e.Value.ToString()))">
+            <option value="">Please Select</option>
+            @foreach (var item in DropDownListItems)
+            {
+                <option value="@item.Code">@item.Description</option>
+            }
+        </select>
+    </div>
+</div>
+
+@if (AllConfigSettings.Count > 0 && SelectedConfigSettings.Count > 0)
+{
+    <table class="table table-hover mt-4" id="tbl-config-settings">
+        <thead>
+            <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var setting in SelectedConfigSettings)
+            {
+                <tr>
+                    <td>@setting.Key</td>
+                    <td>@setting.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick='() => NavigationManager.NavigateTo($"/edit/{SelectedItem}")'>Edit</button>
+    <button class="btn btn-primary" @onclick='() => NavigationManager.NavigateTo($"/add/{SelectedItem}")'>Add New Key/Values</button>
+}

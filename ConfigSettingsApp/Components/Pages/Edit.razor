@@ -1,0 +1,29 @@
+﻿@page "/edit/{Id}"
+@rendermode InteractiveServer
+
+<PageTitle>Edit Config Settings</PageTitle>
+
+@if (AllConfigSettings.Count > 0 && SpecificConfigSettings.Count > 0)
+{
+    <h3>@Title</h3>
+
+    <EditForm Model="@SpecificConfigSettings" OnSubmit="@HandleSubmit" FormName="frmEdit">
+        <AntiforgeryToken />
+        @foreach (var option in SpecificConfigSettings)
+        {
+            <div class="form-group mb-3 row">
+                <label class="col-sm-2 col-form-label">@option.Key</label>
+                <div class="col-sm-10">
+                    <input type="text" id="@option.Key" class="form-control" @onchange="@((ChangeEventArgs c) => ChangeValue(option.Key, c.Value?.ToString() ?? string.Empty))" value=@option.Value />
+                </div>
+            </div>
+        }
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button class="btn btn-secondary" type="button" @onclick='() => NavigationManager.NavigateTo(NavigationManager.BaseUri)'>Back to home</button>
+    </EditForm>
+
+    @if (ShowMessage)
+    {
+        <p id="message" style="padding-top: 20px; color: @MessageColour">@Message</p>
+    }
+}
